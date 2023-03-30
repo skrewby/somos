@@ -1,6 +1,10 @@
 #include <iostream>
 
+#include "Application.h"
+
 int main() {
-    std::cout << "Hello, World!" << std::endl;
+    Application app{"SoMoS"};
+    app.run();
+
     return 0;
 }
