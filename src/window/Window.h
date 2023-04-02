@@ -16,6 +16,7 @@ enum WindowEventType {
 struct WindowEvent {
     bool pending{false};
     WindowEventType type{NO_EVENT};
+    SDL_Event sdl_event{};
 };
 
 class Window {
@@ -33,6 +34,12 @@ public:
 
     [[nodiscard]] float get_scale() const;
 
+    [[nodiscard]] SDL_Window *get_native_window() const;
+    [[nodiscard]] SDL_Renderer *get_native_renderer() const;
+
+    // Draw functions
+    void clear();
+    void render();
 private:
     SDL_Window* window{nullptr};
     SDL_Renderer* renderer{nullptr};

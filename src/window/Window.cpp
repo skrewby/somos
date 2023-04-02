@@ -99,5 +99,22 @@ WindowEvent Window::poll_event() {
     bool pending = SDL_PollEvent(&event) == 1;
     WindowEventType type = pending ? get_event_type(event) : NO_EVENT;
 
-    return {pending, type};
+    return {pending, type, event};
+}
+
+SDL_Window *Window::get_native_window() const {
+    return window;
+}
+
+SDL_Renderer *Window::get_native_renderer() const {
+    return renderer;
+}
+
+void Window::clear() {
+    SDL_SetRenderDrawColor(renderer, 100, 100, 100, 255);
+    SDL_RenderClear(renderer);
+}
+
+void Window::render() {
+    SDL_RenderPresent(renderer);
 }
