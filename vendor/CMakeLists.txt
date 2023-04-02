@@ -14,3 +14,10 @@ FetchContent_Declare(
         GIT_TAG cb8ead1f7198924f97e52973d115e1d4eaeda2f3
 )
 add_subdirectory(imgui)
+
+# Native File Dialog - Extended
+FetchContent_Declare(nfd
+        GIT_REPOSITORY "https://github.com/btzy/nativefiledialog-extended.git"
+        GIT_TAG master
+        )
+add_subdirectory(nfd)

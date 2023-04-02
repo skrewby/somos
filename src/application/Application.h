@@ -37,8 +37,9 @@ private:
     void gui_start_frame();
     void gui_draw();
     void gui_render();
-
     void poll_events();
+
+    std::string choose_rom_file();
 };
 
 

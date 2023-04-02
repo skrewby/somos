@@ -5,19 +5,24 @@
 #include "Application.h"
 
 #include <utility>
+#include <iostream>
 
 #include <backends/imgui_impl_sdl.h>
 #include <backends/imgui_impl_sdlrenderer.h>
 #include <imgui.h>
+#include "nfd.h"
 
 Application::Application(std::string title) {
     // Create SDL Window
     m_window = std::make_shared<Window>(
             Window::Settings{std::move(title)}
     );
+    NFD_Init();
 }
 
-Application::~Application() = default;
+Application::~Application() {
+    NFD_Quit();
+}
 
 void Application::imgui_init() {
     // Setup Dear ImGui context
@@ -149,6 +154,10 @@ void Application::draw_menu_bar() {
     if (ImGui::BeginMainMenuBar()) {
         if (ImGui::BeginMenu("File")) {
             if (ImGui::MenuItem("Load Rom")) {
+                auto path = choose_rom_file();
+                if (!path.empty()) {
+                    std::cout << "Path: " << path << "\n";
+                }
             }
             if (ImGui::MenuItem("Exit")) {
                 stop();
@@ -163,4 +172,18 @@ void Application::draw_menu_bar() {
 void Application::gui_render() {
     ImGui::Render();
     ImGui_ImplSDLRenderer_RenderDrawData(ImGui::GetDrawData());
+}
+
+std::string Application::choose_rom_file() {
+    std::string path;
+
+    nfdchar_t* outPath;
+    nfdfilteritem_t filterItem[1] = {{"SMS Roms", "sms"}};
+    nfdresult_t result = NFD_OpenDialog(&outPath, filterItem, 1, nullptr);
+    if (result == NFD_OKAY) {
+        path = std::string(outPath);
+        NFD_FreePath(outPath);
+    }
+
+    return path;
 }
