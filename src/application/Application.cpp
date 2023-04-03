@@ -151,23 +151,30 @@ void Application::gui_draw() {
         ImGui::ShowDemoWindow();
 
         draw_debug_windows();
+        draw_options_windows();
     }
 }
 
 void Application::draw_menu_bar() {
     if (ImGui::BeginMainMenuBar()) {
-        draw_menu_file();
+        draw_menu_console();
         draw_menu_debug();
+        draw_menu_options();
 
         ImGui::EndMainMenuBar();
     }
 }
 
-void Application::draw_menu_file() {
-    if (ImGui::BeginMenu("File")) {
+void Application::draw_menu_console() {
+    if (ImGui::BeginMenu("Console")) {
         if (ImGui::MenuItem("Load Rom")) {
             load_rom();
         }
+        ImGui::Separator();
+        if (ImGui::MenuItem("Reset")) {
+            m_sms.reset();
+        }
+        ImGui::Separator();
         if (ImGui::MenuItem("Exit")) {
             stop();
         }
@@ -178,7 +185,7 @@ void Application::draw_menu_file() {
 
 void Application::draw_menu_debug() {
     if (ImGui::BeginMenu("Debug")) {
-        ImGui::Checkbox("Cartridge Viewer", &m_show_cart_memory_viewer);
+        ImGui::MenuItem("Cartridge", nullptr, &m_show_cart_memory_viewer);
 
         ImGui::EndMenu();
     }
@@ -191,8 +198,11 @@ void Application::draw_debug_windows() {
 }
 
 void Application::draw_cart_mem_viewer() {
-    ImGui::Begin("Cartridge", &m_show_cart_memory_viewer);
-    if(m_sms.cart_loaded()) {
+    if (!ImGui::Begin("Cartridge", &m_show_cart_memory_viewer)) {
+        ImGui::End();
+        return;
+    }
+    if (m_sms.cart_loaded()) {
         static MemoryEditor mem_edit;
         auto cart = m_sms.dump_cartridge_data();
         mem_edit.DrawWindow("Cartridge", &cart[0], cart.size());
@@ -202,6 +212,38 @@ void Application::draw_cart_mem_viewer() {
     ImGui::End();
 }
 
+void Application::draw_menu_options() {
+    if (ImGui::BeginMenu("Options")) {
+        ImGui::MenuItem("About", nullptr, &m_show_about_window);
+        ImGui::EndMenu();
+    }
+}
+
+
+void Application::draw_options_windows() {
+    if (m_show_about_window) {
+        draw_about_window();
+    }
+}
+
+
+void Application::draw_about_window() {
+    if (!ImGui::Begin("About", &m_show_about_window, ImGuiWindowFlags_AlwaysAutoResize |
+                                                     ImGuiWindowFlags_NoDocking)) {
+        ImGui::End();
+        return;
+    }
+    ImGui::Text("SoMoS - Sega Master System Emulator");
+    ImGui::Text("Author: Pedro Alves (https://www.github.com/overthemil)");
+    ImGui::Text("MIT License");
+    ImGui::Separator();
+    ImGui::Text("LIBRARIES: ");
+    ImGui::Text("Dear ImGui %s", ImGui::GetVersion());
+    ImGui::Text("NativeFileDialog - Extended");
+    ImGui::Text("SDL2");
+
+    ImGui::End();
+}
 
 void Application::gui_render() {
     ImGui::Render();

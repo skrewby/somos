@@ -31,6 +31,7 @@ private:
 
     // GUI variables
     bool m_show_cart_memory_viewer{false};
+    bool m_show_about_window{false};
 
     // Program flow control functions
     void stop();
@@ -43,12 +44,17 @@ private:
 
     // MENU
     void draw_menu_bar();
-    void draw_menu_file();
+    void draw_menu_console();
     void draw_menu_debug();
+    void draw_menu_options();
 
     // DEBUG
     void draw_debug_windows();
     void draw_cart_mem_viewer();
+
+    // OPTIONS
+    void draw_options_windows();
+    void draw_about_window();
 
     void on_event(const SDL_WindowEvent &event);
     void gui_start_frame();

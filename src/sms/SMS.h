@@ -15,6 +15,8 @@ public:
     void load_cartridge(std::vector<uint8_t> rom_file);
     std::vector<uint8_t> dump_cartridge_data();
     bool cart_loaded() const;
+
+    void reset();
 private:
     Memory m_memory;
 

@@ -15,3 +15,6 @@ void Memory::load_cartridge(std::vector<uint8_t> rom_file) {
 std::vector<uint8_t> Memory::dump_cartridge_data() {
     return m_cart;
 }
+
+void Memory::reset() {
+}

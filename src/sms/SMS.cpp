@@ -16,3 +16,7 @@ std::vector<uint8_t> SMS::dump_cartridge_data() {
 bool SMS::cart_loaded() const {
     return m_cart_loaded;
 }
+
+void SMS::reset() {
+
+}
