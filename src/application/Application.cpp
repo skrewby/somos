@@ -6,10 +6,12 @@
 
 #include <utility>
 #include <iostream>
+#include <fstream>
 
 #include <backends/imgui_impl_sdl.h>
 #include <backends/imgui_impl_sdlrenderer.h>
 #include <imgui.h>
+#include "imgui_memory_editor.h"
 #include "nfd.h"
 
 Application::Application(std::string title) {
@@ -147,27 +149,59 @@ void Application::gui_draw() {
         draw_menu_bar();
 
         ImGui::ShowDemoWindow();
+
+        draw_debug_windows();
     }
 }
 
 void Application::draw_menu_bar() {
     if (ImGui::BeginMainMenuBar()) {
-        if (ImGui::BeginMenu("File")) {
-            if (ImGui::MenuItem("Load Rom")) {
-                auto path = choose_rom_file();
-                if (!path.empty()) {
-                    std::cout << "Path: " << path << "\n";
-                }
-            }
-            if (ImGui::MenuItem("Exit")) {
-                stop();
-            }
-            ImGui::EndMenu();
-        }
+        draw_menu_file();
+        draw_menu_debug();
 
         ImGui::EndMainMenuBar();
     }
 }
+
+void Application::draw_menu_file() {
+    if (ImGui::BeginMenu("File")) {
+        if (ImGui::MenuItem("Load Rom")) {
+            load_rom();
+        }
+        if (ImGui::MenuItem("Exit")) {
+            stop();
+        }
+        ImGui::EndMenu();
+    }
+}
+
+
+void Application::draw_menu_debug() {
+    if (ImGui::BeginMenu("Debug")) {
+        ImGui::Checkbox("Cartridge Viewer", &m_show_cart_memory_viewer);
+
+        ImGui::EndMenu();
+    }
+}
+
+void Application::draw_debug_windows() {
+    if (m_show_cart_memory_viewer) {
+        draw_cart_mem_viewer();
+    }
+}
+
+void Application::draw_cart_mem_viewer() {
+    ImGui::Begin("Cartridge", &m_show_cart_memory_viewer);
+    if(m_sms.cart_loaded()) {
+        static MemoryEditor mem_edit;
+        auto cart = m_sms.dump_cartridge_data();
+        mem_edit.DrawWindow("Cartridge", &cart[0], cart.size());
+    } else {
+        ImGui::TextWrapped("NO CART LOADED");
+    }
+    ImGui::End();
+}
+
 
 void Application::gui_render() {
     ImGui::Render();
@@ -175,10 +209,12 @@ void Application::gui_render() {
 }
 
 std::string Application::choose_rom_file() {
+    // TODO: Check Window compatibility (nfd.h uses wchar_t when on Windows
     std::string path;
 
     nfdchar_t* outPath;
     nfdfilteritem_t filterItem[1] = {{"SMS Roms", "sms"}};
+    // TODO: SDL Window doesn't respond when Dialog is open and Abort option is given
     nfdresult_t result = NFD_OpenDialog(&outPath, filterItem, 1, nullptr);
     if (result == NFD_OKAY) {
         path = std::string(outPath);
@@ -186,4 +222,19 @@ std::string Application::choose_rom_file() {
     }
 
     return path;
+}
+
+std::vector<uint8_t> Application::read_rom_file(const std::string &path) {
+    // TODO: Error handling
+    std::ifstream f{path, std::ios::binary};
+    std::vector<uint8_t> rom{std::istreambuf_iterator<char>{f}, {}};
+
+    return rom;
+}
+
+void Application::load_rom() {
+    auto path = choose_rom_file();
+    if (!path.empty()) {
+        m_sms.load_cartridge(read_rom_file(path));
+    }
 }
