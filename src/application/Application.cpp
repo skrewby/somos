@@ -205,7 +205,7 @@ void Application::draw_cart_mem_viewer() {
     if (m_sms.cart_loaded()) {
         static MemoryEditor mem_edit;
         auto cart = m_sms.dump_cartridge_data();
-        mem_edit.DrawWindow("Cartridge", &cart[0], cart.size());
+        mem_edit.DrawContents(&cart[0], cart.size());
     } else {
         ImGui::TextWrapped("NO CART LOADED");
     }
