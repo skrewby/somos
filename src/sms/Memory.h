@@ -14,8 +14,15 @@ public:
     std::vector<uint8_t> dump_cartridge_data();
 
     void reset();
+
+    /**
+     * Check if the loaded cartridge is a Codemasters game. This is required because Codemasters use their own
+     * memory mapper
+     */
+    void check_codemasters();
 private:
     std::vector<uint8_t> m_cart;
+    bool m_codemasters{false};
 };
 
 
