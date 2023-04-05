@@ -6,23 +6,23 @@
 #include "bit_utils.h"
 
 static inline bool is_slot0(uint16_t address) {
-    return (address >= 0x0000 && address <= 0x03ff);
+    return (address >= SLOT0_BASE && address < SLOT1_BASE);
 }
 
 static inline bool is_slot1(uint16_t address) {
-    return (address >= 0x4000 && address <= 0x7fff);
+    return (address >= SLOT1_BASE && address < SLOT2_BASE);
 }
 
 static inline bool is_slot2(uint16_t address) {
-    return (address >= 0x8000 && address <= 0xbfff);
+    return (address >= SLOT2_BASE && address < RAM_BASE);
 }
 
 static inline bool is_ram(uint16_t address) {
-    return (address >= 0xc000 && address <= 0xdfff);
+    return (address >= RAM_BASE && address < RAM_MIRROR_BASE);
 }
 
 static inline bool is_ram_mirror(uint16_t address) {
-    return (address >= 0xe000 && address <= 0xffff);
+    return (address >= RAM_MIRROR_BASE && address <= 0xffff);
 }
 
 
