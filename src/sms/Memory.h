@@ -23,9 +23,12 @@ constexpr uint16_t MAPPER_SLOT0_CONTROL_R = 0xfffd;
 constexpr uint16_t MAPPER_SLOT1_CONTROL_R = 0xfffe;
 constexpr uint16_t MAPPER_SLOT2_CONTROL_R = 0xffff;
 
+constexpr int CART_PAGE_SIZE = 0x4000;
+
 class Memory {
 public:
     void write(uint16_t address, uint8_t data);
+    uint8_t read(const uint16_t& address);
 
     void load_cartridge(std::vector<uint8_t> rom_file);
     std::vector<uint8_t> dump_cartridge_data();
@@ -40,7 +43,7 @@ public:
 private:
     std::array<uint8_t, 0x10000> m_mem;
     std::vector<uint8_t> m_cart;
-    std::array<std::array<uint8_t, 0x3FFF>, 2> m_cart_ram;
+    std::array<std::array<uint8_t, 0x4000>, 2> m_cart_ram;
     bool m_codemasters{false};
 
     bool is_slot2_ram();
@@ -50,6 +53,13 @@ private:
      * @return 0 or 1 for the RAM bank that is mapped to slot2
      */
     int slot2_ram_bank();
+
+    /**
+     * Get the page number for the cartridge ROM assigned to the given slot
+     * @param slot the slot number (options: 0, 1, 2)
+     * @return The number of the cartridge ROM page
+     */
+    int slotx_page(int slot);
 };
 
 
