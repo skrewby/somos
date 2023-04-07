@@ -4,6 +4,9 @@ set(SOURCE_FILES
         SMS.cpp
         Memory.h
         Memory.cpp
+        Z80.h
+        Z80.cpp
+        Registers.h
         )
 
 add_library(${LIBRARY_NAME} SHARED STATIC ${SOURCE_FILES})

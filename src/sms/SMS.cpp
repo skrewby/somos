@@ -4,6 +4,10 @@
 
 #include "SMS.h"
 
+
+SMS::SMS() : m_cpu(&m_memory) {
+}
+
 void SMS::load_cartridge(std::vector<uint8_t> rom_file) {
     reset();
     m_memory.load_cartridge(rom_file);
@@ -20,4 +24,5 @@ bool SMS::cart_loaded() const {
 
 void SMS::reset() {
     m_memory.reset();
+    m_cpu.reset();
 }
