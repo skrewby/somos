@@ -10,12 +10,12 @@
 
 #include <string>
 #include <functional>
+#include <vector>
 
 struct Opcodes {
     std::string mnemonic;
-    std::string description;
     int size;
-    std::function<int(void)> instruction;
+    std::function<void(void)> execute;
 };
 
 class Z80 {
@@ -27,21 +27,26 @@ public:
     void reset();
 
     bool is_flag_set(FLAGS flag) const;
+    int get_cycles() const;
 private:
     Memory* m_mem;
     Registers m_reg;
     Registers m_shadow;
+    std::vector<Opcodes> m_opcode_table;
 
-    void setup_opcode_table();
-    int execute_opcode(uint8_t opcode);
+    // How many cycles it took to execute the last opcode
+    int m_cycles;
+
+    void setup_opcode_table(std::vector<Opcodes>& table);
+    void execute_opcode(uint8_t opcode);
     /**
      * Increments the refresh register by 1. Once the lower 7 bits of the register are 1, they are all reset to 0
      */
     void increment_refresh_r();
 
     // Opcode Instructions
-    int not_implemented();
-    int nop();
+    void nop();
+    void not_implemented();
 };
 
 

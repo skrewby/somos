@@ -7,6 +7,7 @@ set(SOURCE_FILES
         Z80.h
         Z80.cpp
         Registers.h
+        Z80_Opcodes.cpp
         )
 
 add_library(${LIBRARY_NAME} SHARED STATIC ${SOURCE_FILES})

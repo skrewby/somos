@@ -208,3 +208,11 @@ int Memory::slotx_page(int slot) {
 
 }
 
+uint16_t Memory::read_word(const uint16_t &base_address) {
+    uint16_t hi = read(base_address + 1) << 8;
+    uint16_t lo = read(base_address);
+    uint16_t data = hi | lo;
+
+    return data;
+}
+

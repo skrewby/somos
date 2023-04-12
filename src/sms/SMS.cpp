@@ -5,7 +5,7 @@
 #include "SMS.h"
 
 
-SMS::SMS() : m_cpu(&m_memory) {
+SMS::SMS() : m_cpu(&m_memory), m_fps(60) {
 }
 
 void SMS::load_cartridge(std::vector<uint8_t> rom_file) {
@@ -25,4 +25,14 @@ bool SMS::cart_loaded() const {
 void SMS::reset() {
     m_memory.reset();
     m_cpu.reset();
+}
+
+void SMS::update() {
+    unsigned long int cpu_cycles_this_frame = CPU_CLOCK / m_fps;
+    unsigned long int cpu_cycles = 0;
+
+    while(cpu_cycles < cpu_cycles_this_frame) {
+        m_cpu.step();
+        cpu_cycles += m_cpu.get_cycles();
+    }
 }

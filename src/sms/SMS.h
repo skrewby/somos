@@ -11,6 +11,8 @@
 #include <vector>
 #include <cstdint>
 
+constexpr unsigned long CPU_CLOCK = 3579545;
+
 class SMS {
 public:
     SMS();
@@ -19,10 +21,12 @@ public:
     std::vector<uint8_t> dump_cartridge_data();
     bool cart_loaded() const;
 
+    void update();
     void reset();
 private:
     Memory m_memory;
     Z80 m_cpu;
+    int m_fps;
 
     bool m_cart_loaded{false};
 };

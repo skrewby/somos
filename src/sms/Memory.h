@@ -29,6 +29,7 @@ class Memory {
 public:
     void write(uint16_t address, uint8_t data);
     uint8_t read(const uint16_t& address);
+    uint16_t read_word(const uint16_t& base_address);
 
     void load_cartridge(std::vector<uint8_t> rom_file);
     std::vector<uint8_t> dump_cartridge_data();
