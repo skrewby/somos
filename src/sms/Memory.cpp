@@ -146,7 +146,8 @@ uint8_t Memory::read(const uint16_t &address) {
         return m_cart[address];
     }
 
-    // Because Cartridge ROM is mapped to Slots 0,1 and maybe 2, we just read the cartridge page directly
+    // Because Cartridge ROM is mapped to Slots 0,1 and maybe 2, we just read the cartridge page directly to save
+    // multiple copy operations every time the mapper changes pages
     if (address >= 0 && address < SLOT1_BASE) {
         // Read from SLOT0
         int page = slotx_page(0);
