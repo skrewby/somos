@@ -13,3 +13,4 @@ include_directories(${SOMOS_INSTALL_LIB_DIR})
 
 add_subdirectory(src)
 add_subdirectory(vendor)
+add_subdirectory(tests)
