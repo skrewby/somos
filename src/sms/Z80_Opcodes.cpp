@@ -112,3 +112,16 @@ void Z80::add_HL(uint16_t reg) {
     m_reg.HL = (m_reg.HL + reg) & 0xFFFF;
     m_cycles = 11;
 }
+
+void Z80::djnz() {
+  m_reg.B--;
+  m_cycles = 8;
+
+  if(m_reg.B != 0) {
+    int8_t jump_amount = (int8_t) m_mem->read(m_reg.PC + 1);
+    // We need to subtract 2 because the PC will be incremented by this instruction's 
+    // size (2) and we want to jump from the start of the opcode
+    m_reg.PC += jump_amount - 2; 
+    m_cycles = 13;
+  }
+}

@@ -37,3 +37,7 @@ build/
 
 # CLion
 .idea/
+
+# LSP Stuff
+compile_commands.json
+.cache/

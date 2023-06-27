@@ -188,6 +188,15 @@ private:
      * @param reg 16-bit register
      */
     void add_HL(uint16_t reg);
+
+    /**
+     * Decrements the B register and jumps the PC forwards or 
+     * backwards by the amount described in the next byte. 
+     * The jump is measured from the start of the opcode instruction.
+     * Used for opcodes with the format:
+     *      djnz label
+     */
+    void djnz(); 
 };
 
 

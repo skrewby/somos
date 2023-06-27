@@ -28,8 +28,8 @@ void Z80::setup_opcode_table(std::vector<Opcodes> &table) {
             {"inc c",      1, [&]() { inc_8bit(m_reg.C); }},         // 0x0C
             {"dec c",      1, [&]() { dec_8bit(m_reg.C); }},         // 0x0D
             {"ld c, n",    2, [&]() { load_8bit(m_reg.C); }},         // 0x0E
-            {"rrca",           1, [&]() { rrca(); }},         // 0x0F
-            {"",           0, [&]() { not_implemented(); }},         // 0x10
+            {"rrca",       1, [&]() { rrca(); }},         // 0x0F
+            {"djnz d",     2, [&]() { djnz(); }},         // 0x10
             {"",           0, [&]() { not_implemented(); }},         // 0x11
             {"",           0, [&]() { not_implemented(); }},         // 0x12
             {"",           0, [&]() { not_implemented(); }},         // 0x13
