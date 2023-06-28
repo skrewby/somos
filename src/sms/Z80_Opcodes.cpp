@@ -41,10 +41,12 @@ void Z80::inc_8bit(uint8_t &reg) {
     flag_reset(FLAGS::SUBTRACT_N);
     flag_sr(FLAGS::OVERFLOW_V, reg == 0x7F); // 0x7F == 127 in 2s Complement
     flag_sr(FLAGS::HALF_CARRY_H, (reg & 0xF) == 0xF);
-    flag_sr(FLAGS::ZERO_Z, (reg + 1) == 0);
-    flag_sr(FLAGS::SIGN_S, is_bit_set(reg + 1, 7));
 
     reg++;
+
+    flag_sr(FLAGS::ZERO_Z, reg == 0);
+    flag_sr(FLAGS::SIGN_S, is_bit_set(reg, 7));
+
     m_cycles = 4;
 }
 

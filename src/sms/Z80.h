@@ -36,6 +36,18 @@ public:
     Registers get_registers() const;
 
     void set_pc(uint16_t value);
+
+    // Flags
+    void flag_set(FLAGS flag);
+
+    void flag_reset(FLAGS flag);
+
+    /**
+     * Will either set or reset the flag depending on the value of set
+     * @param flag The flag that will be affected
+     * @param set Set the flag is true, otherwise reset
+     */
+    void flag_sr(FLAGS flag, bool set);   
 private:
     Memory* m_mem;
     Registers m_reg;
@@ -61,18 +73,6 @@ private:
      * Increments the refresh register by 1. Once the lower 7 bits of the register are 1, they are all reset to 0
      */
     void increment_refresh_r();
-
-    // Flags
-    void flag_set(FLAGS flag);
-
-    void flag_reset(FLAGS flag);
-
-    /**
-     * Will either set or reset the flag depending on the value of set
-     * @param flag The flag that will be affected
-     * @param set Set the flag is true, otherwise reset
-     */
-    void flag_sr(FLAGS flag, bool set);
 
     // Opcode Instructions
     // Reference: https://clrhome.org/table/#%20

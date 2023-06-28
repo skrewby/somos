@@ -18,7 +18,7 @@ std::vector<uint8_t> open_file(const std::string path) {
   return rom;
 }
 
-std::vector<uint8_t> blank_rom = open_file("test_roms/blank.sms");
+const std::vector<uint8_t> blank_rom = open_file("test_roms/blank.sms");
 
 void setup() {
   z80.reset();
@@ -66,6 +66,7 @@ TEST(OpcodesTest, Opcode_0x01_LD_BC_nn) {
   Registers reg = z80.get_registers();
   EXPECT_EQ(0xc003, reg.PC);
   EXPECT_EQ(0x0302, reg.BC);
+  EXPECT_EQ(0, reg.F);
 }
 
 TEST(OpcodesTest, Opcode_0x02_LD_BCAddr_A) {
@@ -81,4 +82,61 @@ TEST(OpcodesTest, Opcode_0x02_LD_BCAddr_A) {
   Registers reg = z80.get_registers();
   EXPECT_EQ(0xc004, reg.PC);
   EXPECT_EQ(mem.read(0xc006), 0x00);
+  EXPECT_EQ(0, reg.F);
+}
+
+TEST(OpcodesTest, Opcode_0x03_INC_BC) {
+  setup();
+  write_to_ram({0x03});
+  z80.step();
+
+  Registers reg = z80.get_registers();
+
+  EXPECT_EQ(z80.get_cycles(), 6);
+  EXPECT_EQ(reg.PC, 0xc001);
+  EXPECT_EQ(reg.BC, 1);
+  EXPECT_EQ(reg.F, 0);
+}
+
+TEST(OpcodesTest, Opcode_0x04_INC_B) { 
+  setup();
+  write_to_ram({0x04});
+  z80.step();
+
+  Registers reg = z80.get_registers();
+
+  EXPECT_EQ(z80.get_cycles(), 4);
+  EXPECT_EQ(reg.PC, 0xc001);
+  EXPECT_EQ(reg.B, 1);
+  EXPECT_EQ(reg.F, 0);
+
+  setup();
+  write_to_ram({0x01, 0x00, 0xFF, 0x04});
+  z80.flag_set(FLAGS::SUBTRACT_N); 
+  z80.flag_set(FLAGS::CARRY_C);
+  z80.step();
+  z80.step();
+  reg = z80.get_registers();
+  EXPECT_EQ(reg.B, 0);
+  EXPECT_TRUE(z80.is_flag_set(FLAGS::ZERO_Z));
+  EXPECT_TRUE(z80.is_flag_set(FLAGS::CARRY_C));
+  EXPECT_FALSE(z80.is_flag_set(FLAGS::SUBTRACT_N));
+
+  setup();
+  write_to_ram({0x01, 0x00, 0x7F, 0x04});
+  z80.step();
+  z80.step();
+  reg = z80.get_registers();
+  EXPECT_EQ(reg.B, 0x80);
+  EXPECT_TRUE(z80.is_flag_set(FLAGS::OVERFLOW_V));
+  EXPECT_TRUE(z80.is_flag_set(FLAGS::SIGN_S));
+  EXPECT_TRUE(z80.is_flag_set(FLAGS::HALF_CARRY_H));
+
+  setup();
+  write_to_ram({0x01, 0x00, 0x0F, 0x04});
+  z80.step();
+  z80.step();
+  reg = z80.get_registers();
+  EXPECT_EQ(reg.B, 0x10);
+  EXPECT_TRUE(z80.is_flag_set(FLAGS::HALF_CARRY_H));
 }
