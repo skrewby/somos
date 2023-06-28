@@ -8,6 +8,7 @@
 #include "Memory.h"
 #include "Registers.h"
 
+#include <cstdint>
 #include <string>
 #include <functional>
 #include <vector>
@@ -31,7 +32,10 @@ public:
     bool is_flag_set(FLAGS flag) const;
 
     int get_cycles() const;
+  
+    Registers get_registers() const;
 
+    void set_pc(uint16_t value);
 private:
     Memory* m_mem;
     Registers m_reg;

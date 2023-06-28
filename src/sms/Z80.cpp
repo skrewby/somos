@@ -584,7 +584,11 @@ void Z80::increment_refresh_r() {
 }
 
 int Z80::get_cycles() const {
-    return m_cycles;
+  return m_cycles;
+}
+
+Registers Z80::get_registers() const {
+  return m_reg;
 }
 
 void Z80::flag_set(FLAGS flag) {
@@ -601,4 +605,8 @@ void Z80::flag_sr(FLAGS flag, bool set) {
     } else {
         flag_reset(flag);
     }
+}
+
+void Z80::set_pc(uint16_t value) {
+  m_reg.PC = value;
 }

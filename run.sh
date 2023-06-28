@@ -18,5 +18,5 @@ elif [[ $1 == "build" ]]; then
   (cmake -S . -B build)
   (cmake --build build)
 elif [[ $1 == "tests" ]]; then
-  (cd build/tests ; ctest)
+  (cd build/tests ; ctest --output-on-failure)
 fi

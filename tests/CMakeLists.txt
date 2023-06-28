@@ -6,6 +6,7 @@ set(SOMOS_INCLUDE_DIRECTORIES
 
 set(SOMOS_TEST_FILES
   SMSTest.cpp
+  OpcodesTest.cpp
 )
 
 include(FetchContent)
