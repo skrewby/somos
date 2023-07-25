@@ -140,3 +140,29 @@ TEST(OpcodesTest, Opcode_0x04_INC_B) {
   EXPECT_EQ(reg.B, 0x10);
   EXPECT_TRUE(z80.is_flag_set(FLAGS::HALF_CARRY_H));
 }
+
+TEST(OpcodesTest, Opcode_0x05_DEC_B) {
+  setup();
+  write_to_ram({0x06, 0x02, 0x05});
+  z80.step(); // ld b, 0x02 
+  z80.step(); // dec b
+
+  Registers reg = z80.get_registers();
+
+  EXPECT_EQ(z80.get_cycles(), 4);
+  EXPECT_EQ(reg.PC, 0xc003);
+  EXPECT_EQ(reg.B, 1);
+  EXPECT_TRUE(z80.is_flag_set(FLAGS::SUBTRACT_N));
+  EXPECT_FALSE(z80.is_flag_set(FLAGS::OVERFLOW_V));
+
+  // Test if underflows from -128 to 127
+  setup();
+  write_to_ram({0x06, 0x80,0x05});
+  z80.step(); // ld b, 0x80 (-128)
+  z80.step(); // dec b
+  reg = z80.get_registers();
+
+  EXPECT_EQ(reg.B, 0x7F); // reg.B == 127
+  EXPECT_TRUE(z80.is_flag_set(FLAGS::SUBTRACT_N));
+  EXPECT_TRUE(z80.is_flag_set(FLAGS::OVERFLOW_V));
+}
